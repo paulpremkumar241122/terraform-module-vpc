@@ -4,7 +4,7 @@ resource "aws_vpc" "main" {
   tags = merge({
     Name = "${var.env}-vpc"
   },
-  var.tags)
+   var.tags)
 }
 
 resource "aws_subnet" "main" {
@@ -15,5 +15,5 @@ resource "aws_subnet" "main" {
   tags = merge({
     Name = "${var.env}-web-subnet"
   },
-    var.tags)
+  var.tags)
 }
