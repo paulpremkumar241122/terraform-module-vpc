@@ -1,4 +1,4 @@
 variable "cidr_block" {}
 variable "env" {}
 variable "tags" {}
-variable "subnet" {}
+#variable "subnet" {}
