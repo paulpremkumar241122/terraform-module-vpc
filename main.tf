@@ -33,7 +33,6 @@ resource "aws_vpc_peering_connection" "dev-peer" {
 resource "aws_vpc_peering_connection" "def-peer" {
   peer_vpc_id   = var.default_vpc_id
   vpc_id        = aws_vpc.main.id
-  auto_accept   = true
 }
 
 resource "aws_internet_gateway" "igw" {
