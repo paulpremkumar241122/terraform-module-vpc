@@ -30,4 +30,39 @@ resource "aws_vpc_peering_connection" "peer" {
   auto_accept   = true
 }
 
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge({
+    Name = "${var.env}-igw"
+  },
+    var.tags)
+}
+
+resource "aws_route" "route-igw" {
+  route_table_id            = module.subnets["public"].route_table_ids
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.igw.id
+}
+
+resource "aws_eip" "nat" {
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = lookup(lookup(module.subnets, "public", null), "subnet_ids", null)[0]
+
+  tags = merge({
+    Name = "${var.env}-nat"
+  },
+    var.tags)
+}
+
+resource "aws_route" "route-nat" {
+  count = length(local.private_route_table_ids)
+  route_table_id            = element(local.private_route_table_ids, count.index)
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.nat.id
+}
 
