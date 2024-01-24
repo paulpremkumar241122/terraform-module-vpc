@@ -24,9 +24,15 @@ module "subnets" {
 
 
 
-resource "aws_vpc_peering_connection" "peer" {
+resource "aws_vpc_peering_connection" "dev-peer" {
   peer_vpc_id   = aws_vpc.main.id
   vpc_id        = var.default_vpc_id
+  auto_accept   = true
+}
+
+resource "aws_vpc_peering_connection" "def-peer" {
+  peer_vpc_id   = var.default_vpc_id
+  vpc_id        = aws_vpc.main.id
   auto_accept   = true
 }
 
@@ -70,5 +76,5 @@ resource "aws_route" "peer-route" {
   count = length(local.all_route_table_ids)
   route_table_id = element(local.all_route_table_ids, count.index)
   destination_cidr_block = "172.31.0.0/16"
-  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev-peer.id
 }
