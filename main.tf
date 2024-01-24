@@ -24,28 +24,10 @@ module "subnets" {
 
 
 
-#resource "aws_vpc_peering_connection" "peer" {
-#  peer_vpc_id   = aws_vpc.main.id
-#  vpc_id        = var.default_vpc_id
-#  auto_accept   = true
-#}
-
 resource "aws_vpc_peering_connection" "peer" {
   peer_vpc_id   = aws_vpc.main.id
   vpc_id        = var.default_vpc_id
   auto_accept   = true
-
-  tags = {
-    Name = "VPC Peering between foo and bar"
-  }
-}
-
-resource "aws_vpc" "dev" {
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "aws_vpc" "default" {
-  cidr_block = "172.31.0.0/16"
 }
 
 resource "aws_internet_gateway" "igw" {
